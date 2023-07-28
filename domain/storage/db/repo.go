@@ -6,4 +6,5 @@ import (
 
 type Repo interface {
 	GetEstablishmentTypes(context.Context) ([]EstablishmentType, error)
+	GetEstablishments(context.Context) ([]Establishment, error)
 }

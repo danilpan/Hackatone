@@ -12,6 +12,13 @@ import (
 
 const (
 	queryGetEstablishmentTypes = `SELECT id, name FROM establishment_types;`
+	queryGetEstablishments     = `
+	SELECT
+		e.id, e.name, e.address,
+		e.type_id, et.name AS type_name,
+		e.average_check, e.rating, e.images_urls
+	FROM establishments e
+	LEFT JOIN establishment_types et ON et.id = e.type_id;`
 )
 
 type repo struct {
@@ -49,4 +56,22 @@ func (r repo) GetEstablishmentTypes(ctx context.Context) (ets []db.Establishment
 	}
 
 	return ets, nil
+}
+
+func (r repo) GetEstablishments(ctx context.Context) (es []db.Establishment, err error) {
+	defer func() {
+		if err == nil {
+			r.lgr.Printf("get establishments: success")
+			return
+		}
+
+		r.lgr.Printf("get establishments: %v", err)
+	}()
+
+	errGet := r.db.SelectContext(ctx, &es, queryGetEstablishments)
+	if errGet != nil {
+		return nil, fmt.Errorf("executing query: %w", errGet)
+	}
+
+	return es, nil
 }
