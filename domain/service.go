@@ -10,7 +10,7 @@ import (
 )
 
 type Service interface {
-	GetEstablishmentTypes(context.Context) ([]string, error)
+	GetEstablishmentTypes(context.Context) ([]model.EstablishmentType, error)
 	GetEstablishments(context.Context) ([]model.Establishment, error)
 }
 
@@ -28,15 +28,18 @@ func NewService(cfg *configs.Configs, lgr *log.Logger, repo db.Repo) Service {
 	}
 }
 
-func (s service) GetEstablishmentTypes(ctx context.Context) ([]string, error) {
+func (s service) GetEstablishmentTypes(ctx context.Context) ([]model.EstablishmentType, error) {
 	ets, errGet := s.repo.GetEstablishmentTypes(ctx)
 	if errGet != nil {
 		return nil, errGet
 	}
 
-	establishmentTypes := make([]string, 0, len(ets))
+	establishmentTypes := make([]model.EstablishmentType, 0, len(ets))
 	for _, et := range ets {
-		establishmentTypes = append(establishmentTypes, et.Name)
+		establishmentTypes = append(establishmentTypes, model.EstablishmentType{
+			ID:   et.ID,
+			Name: et.Name,
+		})
 	}
 
 	return establishmentTypes, nil
