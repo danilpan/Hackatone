@@ -123,8 +123,8 @@ func (r repo) InsertReserv(ctx context.Context, body model.NewReserv) error {
 }
 
 func (r repo) UpdReserv(ctx context.Context, body model.ReservDo, confirm bool) error {
-	query := fmt.Sprintf(`UPDATE reservation SET confirmed=$1 WHERE table_id=$2 AND user_iin=$3`)
-	_, err := r.db.ExecContext(ctx, query, confirm, body.TableId, body.UserIIN)
+	query := fmt.Sprintf(`UPDATE reservation SET confirmed=$1 WHERE id=$2`)
+	_, err := r.db.ExecContext(ctx, query, confirm, body.ID)
 
 	return err
 }

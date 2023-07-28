@@ -11,6 +11,5 @@ type NewReserv struct {
 }
 
 type ReservDo struct {
-	TableId int    `json:"table_id" db:"table_id"`
-	UserIIN string `json:"user_iin" db:"user_iin"`
+	ID int `json:"id"`
 }

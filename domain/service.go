@@ -2,8 +2,10 @@ package domain
 
 import (
 	"context"
+	"fmt"
 	"log"
 
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/madxiii/hackatone/configs"
 	"github.com/madxiii/hackatone/domain/model"
 	"github.com/madxiii/hackatone/domain/storage/db"
@@ -101,9 +103,34 @@ func (s service) Reserv(ctx context.Context, body model.NewReserv) error {
 		return err
 	}
 
+	if err := sendToBot(1, body); err != nil {
+		return err
+	}
+
 	return nil
 }
 
+func sendToBot(id int, body model.NewReserv) error {
+	bot, err := tgbotapi.NewBotAPI("6599935805:AAFGjCj-2jVrw7_EP-xCDlfsT0A3ID0hRhY")
+	if err != nil {
+		fmt.Printf("NewBotAPI err: %v\n", err)
+		return err
+	}
+
+	bot.Debug = false
+
+	msg := tgbotapi.NewMessage(48909833, fmt.Sprintf("Создана новая заявка №%d, Количество: %d", id, body.Persons))
+
+	msg.ChatID = 48909833
+
+	_, err = bot.Send(msg)
+	if err != nil {
+		fmt.Printf("Send err: %v\n", err)
+		return err
+	}
+
+	return nil
+}
 func (s service) Approve(ctx context.Context, body model.ReservDo) error {
 	if err := s.repo.UpdReserv(ctx, body, true); err != nil {
 		log.Printf("Approve UpdReserv err: %v\n", err)
