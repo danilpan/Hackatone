@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/madxiii/hackatone/app"
@@ -12,6 +11,4 @@ func main() {
 	if err != nil {
 		log.Fatalf("application err: %v\n", err)
 	}
-
-	fmt.Println("Cfg", a)
 }
