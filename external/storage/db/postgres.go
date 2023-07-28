@@ -1,22 +1,23 @@
-package postgres
+package db
 
 import (
 	"context"
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
 	"github.com/madxiii/hackatone/configs"
+
+	_ "github.com/lib/pq"
 )
 
-func InitDB(ctx context.Context, cfg configs.Configs) (*sqlx.DB, error) {
+func newDB(ctx context.Context, cfg *configs.Configs) (*sqlx.DB, error) {
 	db, err := sqlx.ConnectContext(ctx, cfg.Store.DB.Driver, cfg.Store.DB.DSN)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := db.Ping(); err != nil {
-		return nil, err
+	if errPing := db.Ping(); errPing != nil {
+		return nil, errPing
 	}
 
 	db.SetMaxIdleConns(5)
