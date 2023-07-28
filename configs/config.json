@@ -1,0 +1,12 @@
+{
+  "server":{
+   "address": "localhost:9090"
+  },
+  "psql":{
+    "dsn" :"user=admin password=123456Aa dbname=main sslmode=disable host=localhost port=5432",
+    "driver": "postgres"
+},
+  "redis":{
+    "address": "localhost:6379"
+  }
+}
