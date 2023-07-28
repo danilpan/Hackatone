@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
+	"os/signal"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -39,22 +41,20 @@ func New() (App, error) {
 		log.Printf("InitDB err: %v\n", err)
 		return nil, err
 	}
-	defer db.Close()
 
 	rdb, err := redis.InitRDB(ctx, cfg.Store.RDB)
 	if err != nil {
 		log.Printf("InitRDB err: %v\n", err)
 		return nil, err
 	}
-	defer rdb.Close()
 
 	repo := repository.New(db, rdb)
 	service := services.New(cfg, repo)
-	handler := handler.New(cfg, service)
+	hnd := handler.New(cfg, service)
 
 	return app{
 		cfg:     cfg,
-		handler: handler,
+		handler: hnd,
 		route:   echo.New(),
 	}, nil
 }
@@ -64,7 +64,12 @@ func (a app) Run() error {
 
 	go a.start()
 
-	return nil
+	errorChan := make(chan error)
+	gracefulShutdown(errorChan)
+
+	err := <-errorChan
+
+	return err
 }
 
 func (a app) start() {
@@ -72,4 +77,14 @@ func (a app) start() {
 	if err := a.route.Start(port); err != nil {
 		log.Fatalf("incorrect server shutdown: %v\n", err)
 	}
+}
+
+func gracefulShutdown(errorChan chan error) {
+	sigChan := make(chan os.Signal)
+	signal.Notify(sigChan, os.Interrupt)
+
+	go func() {
+		sig := <-sigChan
+		errorChan <- fmt.Errorf("received signal %v", sig)
+	}()
 }
