@@ -61,7 +61,7 @@ ALTER TABLE users
 
 CREATE TABLE reservations
 (
-    id        INTEGER   NOT NULL
+    id        SERIAL   NOT NULL
         CONSTRAINT reservations_pk
             PRIMARY KEY,
     table_id  INTEGER   NOT NULL

@@ -151,6 +151,28 @@ CREATE TABLE public.reservations (
 ALTER TABLE public.reservations OWNER TO admin;
 
 --
+-- Name: reservations_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+--
+
+CREATE SEQUENCE public.reservations_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.reservations_id_seq OWNER TO admin;
+
+--
+-- Name: reservations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+--
+
+ALTER SEQUENCE public.reservations_id_seq OWNED BY public.reservations.id;
+
+
+--
 -- Name: tables; Type: TABLE; Schema: public; Owner: admin
 --
 
@@ -214,6 +236,13 @@ ALTER TABLE ONLY public.establishments ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
+-- Name: reservations id; Type: DEFAULT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.reservations ALTER COLUMN id SET DEFAULT nextval('public.reservations_id_seq'::regclass);
+
+
+--
 -- Name: tables id; Type: DEFAULT; Schema: public; Owner: admin
 --
 
@@ -270,6 +299,13 @@ SELECT pg_catalog.setval('public.establishment_types_id_seq', 6, true);
 --
 
 SELECT pg_catalog.setval('public.establishments_id_seq', 4, true);
+
+
+--
+-- Name: reservations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+--
+
+SELECT pg_catalog.setval('public.reservations_id_seq', 1, false);
 
 
 --
