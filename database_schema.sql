@@ -1,14 +1,3 @@
-CREATE TABLE users
-(
-    iin       CHAR(12) NOT NULL
-        CONSTRAINT users_pk
-            PRIMARY KEY,
-    full_name VARCHAR  NOT NULL
-);
-
-ALTER TABLE users
-    OWNER TO admin;
-
 CREATE TABLE establishment_types
 (
     id   SERIAL
@@ -48,10 +37,23 @@ CREATE TABLE tables
     establishment_id INTEGER NOT NULL
         CONSTRAINT tables_establishments_id_fk
             REFERENCES establishments,
-    number           INTEGER NOT NULL
+    number           INTEGER NOT NULL,
+    CONSTRAINT tables_establishment_id_number
+        UNIQUE (establishment_id, number)
 );
 
 ALTER TABLE tables
+    OWNER TO admin;
+
+CREATE TABLE users
+(
+    iin       CHAR(12) NOT NULL
+        CONSTRAINT users_pk
+            PRIMARY KEY,
+    full_name VARCHAR  NOT NULL
+);
+
+ALTER TABLE users
     OWNER TO admin;
 
 CREATE TABLE reservations

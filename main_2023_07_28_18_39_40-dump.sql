@@ -245,6 +245,9 @@ INSERT INTO public.establishments (id, name, address, type_id, average_check, ra
 -- Data for Name: tables; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
+INSERT INTO public.tables (id, establishment_id, number) VALUES (1, 3, 1);
+INSERT INTO public.tables (id, establishment_id, number) VALUES (2, 3, 2);
+INSERT INTO public.tables (id, establishment_id, number) VALUES (3, 3, 3);
 
 
 --
@@ -271,7 +274,7 @@ SELECT pg_catalog.setval('public.establishments_id_seq', 4, true);
 -- Name: tables_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public.tables_id_seq', 1, false);
+SELECT pg_catalog.setval('public.tables_id_seq', 3, true);
 
 
 --
@@ -296,6 +299,14 @@ ALTER TABLE ONLY public.establishments
 
 ALTER TABLE ONLY public.reservations
     ADD CONSTRAINT reservations_pk PRIMARY KEY (id);
+
+
+--
+-- Name: tables tables_establishment_id_number; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.tables
+    ADD CONSTRAINT tables_establishment_id_number UNIQUE (establishment_id, number);
 
 
 --
