@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/madxiii/hackatone/configs"
 	"github.com/madxiii/hackatone/domain"
+	"github.com/madxiii/hackatone/domain/model"
 )
 
 type Handler struct {
@@ -59,4 +60,49 @@ func (h Handler) GetEstablishment(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, est)
+}
+
+func (h Handler) Reserv(c echo.Context) error {
+	var body model.NewReserv
+	ctx := c.Request().Context()
+
+	if err := c.Bind(&body); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	if err := h.svc.Reserv(ctx, body); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, "success")
+}
+
+func (h Handler) Approve(c echo.Context) error {
+	var body model.ReservDo
+	ctx := c.Request().Context()
+
+	if err := c.Bind(&body); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	if err := h.svc.Approve(ctx, body); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, "approve")
+}
+
+func (h Handler) Decline(c echo.Context) error {
+	var body model.ReservDo
+	ctx := c.Request().Context()
+
+	if err := c.Bind(&body); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	if err := h.svc.Decline(ctx, body); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, "decline")
 }

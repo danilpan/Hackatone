@@ -7,6 +7,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/madxiii/hackatone/configs"
+	"github.com/madxiii/hackatone/domain/model"
 	"github.com/madxiii/hackatone/domain/storage/db"
 )
 
@@ -111,4 +112,19 @@ func (r repo) GetEstablishment(ctx context.Context, id int) (est db.Establishmen
 	}
 
 	return est, ts, nil
+}
+
+func (r repo) InsertReserv(ctx context.Context, body model.NewReserv) error {
+	query := fmt.Sprintf(`INSERT INTO reservations (table_id, user_iin, time_from, time_to, persons)
+		  VALUES (:table_id, :user_iin, :time_from, :time_to, :persons)`)
+	_, err := r.db.NamedExecContext(ctx, query, body)
+
+	return err
+}
+
+func (r repo) UpdReserv(ctx context.Context, body model.ReservDo, confirm bool) error {
+	query := fmt.Sprintf(`UPDATE reservation SET confirmed=$1 WHERE table_id=$2 AND user_iin=$3`)
+	_, err := r.db.ExecContext(ctx, query, confirm, body.TableId, body.UserIIN)
+
+	return err
 }
