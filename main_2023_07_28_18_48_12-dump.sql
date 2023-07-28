@@ -157,7 +157,9 @@ ALTER TABLE public.reservations OWNER TO admin;
 CREATE TABLE public.tables (
     id integer NOT NULL,
     establishment_id integer NOT NULL,
-    number integer NOT NULL
+    number integer NOT NULL,
+    persons integer NOT NULL,
+    CONSTRAINT persons_check CHECK ((persons >= 1))
 );
 
 
@@ -245,9 +247,9 @@ INSERT INTO public.establishments (id, name, address, type_id, average_check, ra
 -- Data for Name: tables; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
-INSERT INTO public.tables (id, establishment_id, number) VALUES (1, 3, 1);
-INSERT INTO public.tables (id, establishment_id, number) VALUES (2, 3, 2);
-INSERT INTO public.tables (id, establishment_id, number) VALUES (3, 3, 3);
+INSERT INTO public.tables (id, establishment_id, number, persons) VALUES (1, 3, 1, 4);
+INSERT INTO public.tables (id, establishment_id, number, persons) VALUES (2, 3, 2, 6);
+INSERT INTO public.tables (id, establishment_id, number, persons) VALUES (3, 3, 3, 6);
 
 
 --

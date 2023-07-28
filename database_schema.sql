@@ -38,6 +38,9 @@ CREATE TABLE tables
         CONSTRAINT tables_establishments_id_fk
             REFERENCES establishments,
     number           INTEGER NOT NULL,
+    persons          INTEGER NOT NULL
+        CONSTRAINT persons_check
+            CHECK (persons >= 1),
     CONSTRAINT tables_establishment_id_number
         UNIQUE (establishment_id, number)
 );
