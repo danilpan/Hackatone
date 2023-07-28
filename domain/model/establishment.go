@@ -7,5 +7,5 @@ type Establishment struct {
 	AverageCheck int      `json:"averageCheck"`
 	Rating       int      `json:"rating"`
 	ImagesURLs   []string `json:"imagesURLs"`
-	Tables       []int    `json:"tables,omitempty"`
+	Tables       []Table  `json:"tables,omitempty"`
 }

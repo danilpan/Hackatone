@@ -19,6 +19,20 @@ const (
 		e.average_check, e.rating, e.images_urls
 	FROM establishments e
 	LEFT JOIN establishment_types et ON et.id = e.type_id;`
+
+	queryGetEstablishment = `
+	SELECT
+		e.id, e.name, e.address,
+		e.type_id, et.name AS type_name,
+		e.average_check, e.rating, e.images_urls
+	FROM establishments e
+	LEFT JOIN establishment_types et ON et.id = e.type_id
+	WHERE e.id = $1;`
+
+	queryGetEstablishmentsTables = `
+	SELECT t.id, t.establishment_id, t.number, t.persons
+	FROM tables t
+	WHERE t.establishment_id = $1;`
 )
 
 type repo struct {
@@ -74,4 +88,27 @@ func (r repo) GetEstablishments(ctx context.Context) (es []db.Establishment, err
 	}
 
 	return es, nil
+}
+
+func (r repo) GetEstablishment(ctx context.Context, id int) (est db.Establishment, ts []db.Table, err error) {
+	defer func() {
+		if err == nil {
+			r.lgr.Printf("get establishment with id %d: success", id)
+			return
+		}
+
+		r.lgr.Printf("get establishment with id %d: %v", id, err)
+	}()
+
+	errGet := r.db.GetContext(ctx, &est, queryGetEstablishment, id)
+	if errGet != nil {
+		return db.Establishment{}, nil, fmt.Errorf("executing query: %w", errGet)
+	}
+
+	errGetTables := r.db.SelectContext(ctx, &ts, queryGetEstablishmentsTables, id)
+	if errGetTables != nil {
+		return db.Establishment{}, nil, fmt.Errorf("executing query: %w", errGetTables)
+	}
+
+	return est, ts, nil
 }

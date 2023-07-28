@@ -12,6 +12,7 @@ import (
 type Service interface {
 	GetEstablishmentTypes(context.Context) ([]model.EstablishmentType, error)
 	GetEstablishments(context.Context) ([]model.Establishment, error)
+	GetEstablishment(ctx context.Context, id int) (model.Establishment, error)
 }
 
 type service struct {
@@ -64,4 +65,29 @@ func (s service) GetEstablishments(ctx context.Context) ([]model.Establishment, 
 	}
 
 	return establishments, nil
+}
+
+func (s service) GetEstablishment(ctx context.Context, id int) (model.Establishment, error) {
+	dbEstablishment, dbTables, errGet := s.repo.GetEstablishment(ctx, id)
+	if errGet != nil {
+		return model.Establishment{}, errGet
+	}
+
+	tables := make([]model.Table, 0, len(dbTables))
+	for _, dbTable := range dbTables {
+		tables = append(tables, model.Table{
+			Number:  dbTable.Number,
+			Persons: dbTable.Persons,
+		})
+	}
+
+	return model.Establishment{
+		Name:         dbEstablishment.Name,
+		Address:      dbEstablishment.Address,
+		Type:         dbEstablishment.TypeName,
+		AverageCheck: dbEstablishment.AverageCheck,
+		Rating:       dbEstablishment.Rating,
+		ImagesURLs:   dbEstablishment.ImagesURLs,
+		Tables:       tables,
+	}, nil
 }

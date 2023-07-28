@@ -44,3 +44,19 @@ func (h Handler) GetEstablishments(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, ests)
 }
+
+func (h Handler) GetEstablishment(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	rq := getEstablishmentRq{}
+	if errBind := c.Bind(&rq); errBind != nil {
+		return errBind
+	}
+
+	est, errGet := h.svc.GetEstablishment(ctx, rq.ID)
+	if errGet != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, errGet.Error())
+	}
+
+	return c.JSON(http.StatusOK, est)
+}
