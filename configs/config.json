@@ -3,7 +3,7 @@
    "address": "9090"
   },
   "psql":{
-    "dsn" :"user=wikizryuatvdce password=b9cf7e3712cf581144fe69a31844d0628e0bb4abec2143759bdbcea5f02b5e73 dbname=d7pa2050gj777r sslmode=disable host=ec2-54-73-22-169.eu-west-1.compute.amazonaws.com port=5432",
+    "dsn" :"user=wikizryuatvdce password=b9cf7e3712cf581144fe69a31844d0628e0bb4abec2143759bdbcea5f02b5e73 dbname=d7pa2050gj777r sslmode=enable host=ec2-54-73-22-169.eu-west-1.compute.amazonaws.com port=5432",
     "driver": "postgres"
 },
   "redis":{
