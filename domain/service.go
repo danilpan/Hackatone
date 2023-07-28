@@ -13,6 +13,9 @@ type Service interface {
 	GetEstablishmentTypes(context.Context) ([]model.EstablishmentType, error)
 	GetEstablishments(context.Context) ([]model.Establishment, error)
 	GetEstablishment(ctx context.Context, id int) (model.Establishment, error)
+	Reserv(ctx context.Context, body model.NewReserv) error
+	Approve(ctx context.Context, body model.ReservDo) error
+	Decline(ctx context.Context, body model.ReservDo) error
 }
 
 type service struct {
@@ -90,4 +93,31 @@ func (s service) GetEstablishment(ctx context.Context, id int) (model.Establishm
 		ImagesURLs:   dbEstablishment.ImagesURLs,
 		Tables:       tables,
 	}, nil
+}
+
+func (s service) Reserv(ctx context.Context, body model.NewReserv) error {
+	if err := s.repo.InsertReserv(ctx, body); err != nil {
+		log.Printf("Reserv InsertReserv err: %v\n", err)
+		return err
+	}
+
+	return nil
+}
+
+func (s service) Approve(ctx context.Context, body model.ReservDo) error {
+	if err := s.repo.UpdReserv(ctx, body, true); err != nil {
+		log.Printf("Approve UpdReserv err: %v\n", err)
+		return err
+	}
+
+	return nil
+}
+
+func (s service) Decline(ctx context.Context, body model.ReservDo) error {
+	if err := s.repo.UpdReserv(ctx, body, false); err != nil {
+		log.Printf("Decline UpdReserv err: %v\n", err)
+		return err
+	}
+
+	return nil
 }
