@@ -25,15 +25,16 @@ CREATE TABLE establishments
     id            SERIAL
         CONSTRAINT establishments_pk
             PRIMARY KEY,
-    name          VARCHAR NOT NULL,
-    address       VARCHAR NOT NULL,
-    type_id       INTEGER NOT NULL
+    name          VARCHAR             NOT NULL,
+    address       VARCHAR             NOT NULL,
+    type_id       INTEGER             NOT NULL
         CONSTRAINT establishments_establishment_types_id_fk
             REFERENCES establishment_types,
-    average_check INTEGER NOT NULL,
-    rating        INTEGER NOT NULL
+    average_check INTEGER             NOT NULL,
+    rating        INTEGER             NOT NULL
         CONSTRAINT check_name
-            CHECK ((1 <= rating) AND (rating <= 5))
+            CHECK ((1 <= rating) AND (rating <= 5)),
+    images_urls   CHARACTER VARYING[] NOT NULL
 );
 
 ALTER TABLE establishments
@@ -65,7 +66,11 @@ CREATE TABLE reservations
         CONSTRAINT reservations_users_iin_fk
             REFERENCES users,
     time_from TIMESTAMP NOT NULL,
-    time_to   TIMESTAMP NOT NULL
+    time_to   TIMESTAMP NOT NULL,
+    confirmed BOOLEAN,
+    persons   INTEGER   NOT NULL
+        CONSTRAINT check_name
+            CHECK (persons >= 1)
 );
 
 ALTER TABLE reservations
