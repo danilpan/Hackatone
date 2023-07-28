@@ -33,3 +33,14 @@ func (h Handler) GetEstablishmentTypes(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, estTypes)
 }
+
+func (h Handler) GetEstablishments(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	ests, errGet := h.svc.GetEstablishments(ctx)
+	if errGet != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, errGet.Error())
+	}
+
+	return c.JSON(http.StatusOK, ests)
+}
