@@ -64,7 +64,7 @@ func (a app) Run() error {
 }
 
 func (a app) start() {
-	port := fmt.Sprintf(":%s", a.cfg.Server.Address)
+	port := fmt.Sprintf(":%s", os.Getenv("PORT"))
 	if err := a.fwk.Start(port); err != nil {
 		log.Fatalf("incorrect server shutdown: %v\n", err)
 	}
