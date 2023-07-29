@@ -98,12 +98,13 @@ func (s service) GetEstablishment(ctx context.Context, id int) (model.Establishm
 }
 
 func (s service) Reserv(ctx context.Context, body model.NewReserv) error {
-	if err := s.repo.InsertReserv(ctx, body); err != nil {
+	id, err := s.repo.InsertReserv(ctx, body)
+	if err != nil {
 		log.Printf("Reserv InsertReserv err: %v\n", err)
 		return err
 	}
 
-	if err := sendToBot(1, body); err != nil {
+	if err := sendToBot(id, body); err != nil {
 		return err
 	}
 

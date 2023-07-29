@@ -114,12 +114,19 @@ func (r repo) GetEstablishment(ctx context.Context, id int) (est db.Establishmen
 	return est, ts, nil
 }
 
-func (r repo) InsertReserv(ctx context.Context, body model.NewReserv) error {
+func (r repo) InsertReserv(ctx context.Context, body model.NewReserv) (int, error) {
 	query := fmt.Sprintf(`INSERT INTO reservations (table_id, user_iin, time_from, time_to, persons)
-		  VALUES (:table_id, :user_iin, :time_from, :time_to, :persons)`)
-	_, err := r.db.NamedExecContext(ctx, query, body)
+		  VALUES (:table_id, :user_iin, :time_from, :time_to, :persons) RETURNING id`)
+	rows, err := r.db.NamedQueryContext(ctx, query, body)
 
-	return err
+	var id int
+	if rows.Next() {
+		if err := rows.Scan(&id); err != nil {
+			return 0, err
+		}
+	}
+
+	return id, err
 }
 
 func (r repo) UpdReserv(ctx context.Context, body model.ReservDo, confirm bool) error {
