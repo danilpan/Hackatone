@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/madxiii/hackatone/api/handler"
 	"github.com/madxiii/hackatone/configs"
 	"github.com/madxiii/hackatone/domain"
@@ -51,6 +52,10 @@ func New() (App, error) {
 }
 
 func (a app) Run() error {
+	a.fwk.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{"*"},
+	}))
 	a.Routes()
 
 	go a.start()
